@@ -55,6 +55,36 @@ const errorHandler = (err, req, res, next) => {
     message = "Tenant already checked out";
   }
 
+  if (err.message === "Invalid payment type") {
+    status = 400;
+    message = "Invalid payment type";
+  }
+
+  if (err.message === "Amount must be greater than 0") {
+    status = 400;
+    message = "Amount must be greater than 0";
+  }
+
+  if (err.message === "Room has active tenant") {
+    status = 400;
+    message = "Room has active tenant";
+  }
+
+  if (err.message === "Guest has active tenant") {
+    status = 400;
+    message = "Guest has active tenant";
+  }
+
+  if (err.message === "Cannot delete active tenant") {
+    status = 400;
+    message = "Cannot delete active tenant";
+  }
+
+  if (err.message === "Tenant has payment history") {
+    status = 400;
+    message = "Tenant has payment history";
+  }
+
   // 401 - Unauthenticated
   if (err.message === "Invalid username or password") {
     status = 401;
@@ -90,6 +120,11 @@ const errorHandler = (err, req, res, next) => {
   if (err.message === "Guest not found") {
     status = 404;
     message = "Guest not found";
+  }
+
+  if (err.message === "Tenant not found") {
+    status = 404;
+    message = "Tenant not found";
   }
 
   if (err.message === "Tenant not found") {

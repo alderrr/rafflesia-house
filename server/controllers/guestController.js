@@ -111,10 +111,20 @@ class guestController {
 
       const db = getDB();
       const guests = db.collection("guests");
+      const tenants = db.collection("tenants");
 
-      const deletedGuest = await guests.deleteOne({ _id: new ObjectId(id) });
+      const guest = await guests.findOne({ _id: new ObjectId(id) });
 
-      if (deletedGuest.deletedCount === 0) throw new Error("Guest not found");
+      if (!guest) throw new Error("Guest not found");
+
+      const activeTenant = await tenants.findOne({
+        guestId: new ObjectId(id),
+        isActive: true,
+      });
+
+      if (activeTenant) throw new Error("Guest has active tenant");
+
+      await guests.deleteOne({ _id: new ObjectId(id) });
 
       res.status(200).json({ message: "Guest deleted successfully" });
     } catch (err) {

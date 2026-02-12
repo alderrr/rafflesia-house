@@ -3,6 +3,8 @@ const guestController = require("../controllers/guestController");
 const roomController = require("../controllers/roomController");
 const tenantController = require("../controllers/tenantController");
 const dashboardController = require("../controllers/dashboardController");
+const paymentController = require("../controllers/paymentController");
+const reportController = require("../controllers/reportController");
 const authentication = require("../middlewares/authentication");
 const router = require("express").Router();
 
@@ -40,6 +42,18 @@ router.post("/api/admin/tenants", tenantController.createTenant);
 router.get("/api/admin/tenants", tenantController.getTenants);
 router.get("/api/admin/tenants/:id", tenantController.getTenant);
 router.patch("/api/admin/tenants/:id", tenantController.checkoutTenant);
+router.delete("/api/admin/tenants/:id", tenantController.deleteTenant);
+
+// ADMIN PAYMENTS
+router.post("/api/admin/payments", paymentController.createPayment);
+router.get("/api/admin/payments", paymentController.getPayments);
+router.get(
+  "/api/admin/tenants/:id/payments",
+  paymentController.getTenantPayments,
+);
+
+// ADMIN REPORTS
+router.get("/api/admin/reports/financial", reportController.financialSummary);
 
 // PUBLIC ROOMS
 router.get("/api/public/rooms", roomController.getPublicRooms);

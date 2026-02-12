@@ -1,6 +1,18 @@
 const { getDB } = require("../config/db");
 const { ObjectId } = require("mongodb");
 
+const addDays = (date, days) => {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+};
+
+const addMonths = (date, months) => {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
+};
+
 class tenantController {
   static async createTenant(req, res, next) {
     try {
@@ -24,6 +36,11 @@ class tenantController {
 
       if (!room.isAvailable) throw new Error("Room is not available");
 
+      const checkIn = new Date(checkInDate || new Date());
+
+      const nextPaymentDate =
+        paymentType === "daily" ? addDays(checkIn, 1) : addMonths(checkIn, 1);
+
       const price = paymentType === "daily" ? room.priceDaily : room.Monthly;
 
       const deposit = room.depositAmount || 0;
@@ -37,6 +54,7 @@ class tenantController {
         depositReturned: false,
         checkInDate: new Date(checkInDate || new Date()),
         checkOutDate: null,
+        nextPaymentDate,
         isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -55,7 +73,6 @@ class tenantController {
       next(err);
     }
   }
-
   static async checkoutTenant(req, res, next) {
     try {
       const { id } = req.params;
@@ -97,7 +114,6 @@ class tenantController {
       next(err);
     }
   }
-
   static async getTenants(req, res, next) {
     try {
       const db = getDB();
@@ -110,7 +126,6 @@ class tenantController {
       next(err);
     }
   }
-
   static async getTenant(req, res, next) {
     try {
       const { id } = req.params;
@@ -127,6 +142,41 @@ class tenantController {
       if (!foundTenant) throw new Error("Tenant not found");
 
       res.status(200).json(foundTenant);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async deleteTenant(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      if (!ObjectId.isValid(id)) throw new Error("Tenant not found");
+
+      const db = getDB();
+      const tenants = db.collection("tenants");
+      const payments = db.collection("payments");
+
+      const tenant = await tenants.findOne({
+        _id: new ObjectId(id),
+      });
+
+      if (!tenant) throw new Error("Tenant not found");
+
+      if (tenant.isActive) throw new Error("Cannot delete active tenant");
+
+      const existingPayment = await payments.findOne({
+        tenantId: new ObjectId(id),
+      });
+
+      if (existingPayment) throw new Error("Tenant has payment history");
+
+      await tenants.deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      res.status(200).json({
+        message: "Tenant deleted successfully",
+      });
     } catch (err) {
       next(err);
     }

@@ -104,14 +104,25 @@ class roomController {
   static async deleteRoom(req, res, next) {
     try {
       const { id } = req.params;
+
       if (!ObjectId.isValid(id)) throw new Error("Room not found");
 
       const db = getDB();
       const rooms = db.collection("rooms");
+      const tenants = db.collection("tenants");
 
-      const deletedRoom = await rooms.deleteOne({ _id: new ObjectId(id) });
+      const room = await rooms.findOne({ _id: new ObjectId(id) });
 
-      if (deletedRoom.deletedCount === 0) throw new Error("Room not found");
+      if (!room) throw new Error("Room not found");
+
+      const activeTenant = await tenants.findOne({
+        roomId: new ObjectId(id),
+        isActive: true,
+      });
+
+      if (activeTenant) throw new Error("Room has active tenant");
+
+      await rooms.deleteOne({ _id: new ObjectId(id) });
 
       res.status(200).json({ message: "Room deleted successfully" });
     } catch (err) {
