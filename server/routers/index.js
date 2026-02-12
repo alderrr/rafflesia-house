@@ -1,6 +1,7 @@
 const authController = require("../controllers/authController");
 const guestController = require("../controllers/guestController");
 const roomController = require("../controllers/roomController");
+const tenantController = require("../controllers/tenantController");
 const authentication = require("../middlewares/authentication");
 const router = require("express").Router();
 
@@ -29,6 +30,12 @@ router.get("/api/admin/rooms", roomController.getRooms);
 router.get("/api/admin/rooms/:id", roomController.getRoom);
 router.put("/api/admin/rooms/:id", roomController.updateRoom);
 router.delete("/api/admin/rooms/:id", roomController.deleteRoom);
+
+// ADMIN TENANTS
+router.post("/api/admin/tenants", tenantController.createTenant);
+router.get("/api/admin/tenants", tenantController.getTenants);
+router.get("/api/admin/tenants/:id", tenantController.getTenant);
+router.patch("/api/admin/tenants/:id", tenantController.checkoutTenant);
 
 // PUBLIC ROOMS
 router.get("/api/public/rooms", roomController.getPublicRooms);

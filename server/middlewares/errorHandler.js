@@ -40,6 +40,21 @@ const errorHandler = (err, req, res, next) => {
     message = "At least one price is required";
   }
 
+  if (err.message === "Room is not available") {
+    status = 400;
+    message = "Room is not available";
+  }
+
+  if (err.message === "Invalid payment type") {
+    status = 400;
+    message = "Invalid payment type";
+  }
+
+  if (err.message === "Tenant already checked out") {
+    status = 400;
+    message = "Tenant already checked out";
+  }
+
   // 401 - Unauthenticated
   if (err.message === "Invalid username or password") {
     status = 401;
@@ -75,6 +90,11 @@ const errorHandler = (err, req, res, next) => {
   if (err.message === "Guest not found") {
     status = 404;
     message = "Guest not found";
+  }
+
+  if (err.message === "Tenant not found") {
+    status = 404;
+    message = "Tenant not found";
   }
 
   res.status(status).json({
