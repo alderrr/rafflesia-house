@@ -8,15 +8,29 @@ class dashboardController {
       const rooms = db.collection("rooms");
       const tenants = db.collection("tenants");
 
-      const totalRooms = await rooms.countDocuments();
-      const availableRooms = await rooms.countDocuments({ isAvailable: true });
+      const totalRooms = await rooms.countDocuments({
+        isDeleted: { $ne: true },
+      });
+      const availableRooms = await rooms.countDocuments({
+        isAvailable: true,
+        isDeleted: { $ne: true },
+      });
       const occupiedRooms = totalRooms - availableRooms;
 
-      const activeTenants = await tenants.countDocuments({ isActive: true });
+      const activeTenants = await tenants.countDocuments({
+        isActive: true,
+        isDeleted: { $ne: true },
+      });
 
       const depositAgg = await tenants
         .aggregate([
-          { $match: { isActive: true, depositReturned: false } },
+          {
+            $match: {
+              isActive: true,
+              depositReturned: false,
+              isDeleted: { $ne: true },
+            },
+          },
           {
             $group: {
               _id: null,
@@ -30,7 +44,7 @@ class dashboardController {
 
       const revenueAgg = await tenants
         .aggregate([
-          { $match: { isActive: true } },
+          { $match: { isActive: true, isDeleted: { $ne: true } } },
           { $group: { _id: null, totalRevenue: { $sum: "$price" } } },
         ])
         .toArray();

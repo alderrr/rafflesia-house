@@ -54,7 +54,9 @@ class roomController {
       const db = getDB();
       const rooms = db.collection("rooms");
 
-      const foundRooms = await rooms.find({}).toArray();
+      const foundRooms = await rooms
+        .find({ isDeleted: { $ne: true } })
+        .toArray();
 
       res.status(200).json(foundRooms);
     } catch (err) {
@@ -71,6 +73,7 @@ class roomController {
 
       const foundRoom = await rooms.findOne({
         _id: new ObjectId(id),
+        isDeleted: { $ne: true },
       });
 
       if (!foundRoom) throw new Error("Room not found");
@@ -111,7 +114,10 @@ class roomController {
       const rooms = db.collection("rooms");
       const tenants = db.collection("tenants");
 
-      const room = await rooms.findOne({ _id: new ObjectId(id) });
+      const room = await rooms.findOne({
+        _id: new ObjectId(id),
+        isDeleted: { $ne: true },
+      });
 
       if (!room) throw new Error("Room not found");
 
@@ -122,7 +128,16 @@ class roomController {
 
       if (activeTenant) throw new Error("Room has active tenant");
 
-      await rooms.deleteOne({ _id: new ObjectId(id) });
+      await rooms.updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            isDeleted: true,
+            deletedAt: new Date(),
+            updatedAt: new Date(),
+          },
+        },
+      );
 
       res.status(200).json({ message: "Room deleted successfully" });
     } catch (err) {
@@ -136,7 +151,7 @@ class roomController {
       const db = getDB();
       const rooms = db.collection("rooms");
 
-      let filter = {};
+      let filter = { isDeleted: { $ne: true } };
 
       if (available === "true") {
         filter.isAvailable = true;

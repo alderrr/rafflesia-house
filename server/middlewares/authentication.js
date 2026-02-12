@@ -29,6 +29,7 @@ const authentication = async (req, res, next) => {
     req.user = {
       id: foundAdmin._id,
       username: foundAdmin.username,
+      role: foundAdmin.role,
     };
     next();
   } catch (err) {

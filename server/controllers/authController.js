@@ -6,11 +6,11 @@ const { ObjectId } = require("mongodb");
 class authController {
   static async registerAdmin(req, res, next) {
     try {
-      const { username, password } = req.body || {};
+      const { username, password, role } = req.body || {};
 
-      if (!username || !password) {
+      if (!username || !password)
         throw new Error("Username and password are required");
-      }
+      if (!["owner", "staff"].includes(role)) throw new Error("Invalid role");
 
       const db = getDB();
       const admins = db.collection("admins");
@@ -22,8 +22,9 @@ class authController {
 
       const hashedPassword = hashPassword(password);
       const newAdmin = await admins.insertOne({
-        username: username,
+        username,
         password: hashedPassword,
+        role,
         createdAt: new Date(),
       });
 
@@ -58,6 +59,7 @@ class authController {
       const access_token = signToken({
         id: foundAdmin._id,
         username: foundAdmin.username,
+        role: foundAdmin.role,
       });
 
       res.status(200).json({ access_token });

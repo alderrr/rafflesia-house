@@ -85,6 +85,11 @@ const errorHandler = (err, req, res, next) => {
     message = "Tenant has payment history";
   }
 
+  if (err.message === "Invalid role") {
+    status = 400;
+    message = "Invalid role";
+  }
+
   // 401 - Unauthenticated
   if (err.message === "Invalid username or password") {
     status = 401;
@@ -104,6 +109,12 @@ const errorHandler = (err, req, res, next) => {
   if (err.message === "Invalid access token") {
     status = 401;
     message = "Invalid access token";
+  }
+
+  // 403
+  if (err.message === "Forbidden") {
+    status = 403;
+    message = "Forbidden";
   }
 
   // 404 - Not Found

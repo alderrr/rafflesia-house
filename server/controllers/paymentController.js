@@ -97,7 +97,7 @@ class paymentController {
       const db = getDB();
       const payments = db.collection("payments");
 
-      const filter = {};
+      const filter = { isDeleted: { $ne: true } };
       if (tenantId) {
         if (!ObjectId.isValid(tenantId)) throw new Error("Tenant not found");
         filter.tenantId = new ObjectId(tenantId);
@@ -125,7 +125,7 @@ class paymentController {
       const payments = db.collection("payments");
 
       const rows = await payments
-        .find({ tenantId: new ObjectId(id) })
+        .find({ tenantId: new ObjectId(id), isDeleted: { $ne: true } })
         .sort({ paidAt: -1 })
         .toArray();
 

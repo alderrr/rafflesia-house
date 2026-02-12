@@ -39,7 +39,9 @@ class guestController {
       const db = getDB();
       const guests = db.collection("guests");
 
-      const foundGuests = await guests.find({}).toArray();
+      const foundGuests = await guests
+        .find({ isDeleted: { $ne: true } })
+        .toArray();
 
       res.status(200).json(foundGuests);
     } catch (err) {
@@ -59,6 +61,7 @@ class guestController {
 
       const foundGuest = await guests.findOne({
         _id: new ObjectId(id),
+        isDeleted: { $ne: true },
       });
 
       if (!foundGuest) {
@@ -113,7 +116,10 @@ class guestController {
       const guests = db.collection("guests");
       const tenants = db.collection("tenants");
 
-      const guest = await guests.findOne({ _id: new ObjectId(id) });
+      const guest = await guests.findOne({
+        _id: new ObjectId(id),
+        isDeleted: { $ne: true },
+      });
 
       if (!guest) throw new Error("Guest not found");
 
@@ -124,7 +130,16 @@ class guestController {
 
       if (activeTenant) throw new Error("Guest has active tenant");
 
-      await guests.deleteOne({ _id: new ObjectId(id) });
+      await guests.updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            isDeleted: true,
+            deletedAt: new Date(),
+            updatedAt: new Date(),
+          },
+        },
+      );
 
       res.status(200).json({ message: "Guest deleted successfully" });
     } catch (err) {
