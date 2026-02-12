@@ -2,6 +2,7 @@ const authController = require("../controllers/authController");
 const guestController = require("../controllers/guestController");
 const roomController = require("../controllers/roomController");
 const tenantController = require("../controllers/tenantController");
+const dashboardController = require("../controllers/dashboardController");
 const authentication = require("../middlewares/authentication");
 const router = require("express").Router();
 
@@ -10,6 +11,9 @@ router.post("/api/admin/login", authController.loginAdmin);
 
 // PROTECTED ROUTES
 router.use("/api/admin", authentication);
+
+// ADMIN DASHBOARD
+router.get("/api/admin/dashboard", dashboardController.getDashboard);
 
 // ADMIN USERS
 router.post("/api/admin/users", authController.registerAdmin);
