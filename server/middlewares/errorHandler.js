@@ -4,6 +4,7 @@ const errorHandler = (err, req, res, next) => {
 
   console.log(err);
 
+  // 400 - Bad Request
   if (err.message === "Username and password are required") {
     status = 400;
     message = "Username and password are required";
@@ -14,6 +15,22 @@ const errorHandler = (err, req, res, next) => {
     message = "Username already exists";
   }
 
+  if (err.message === "Room already exists") {
+    status = 400;
+    message = "Room already exists";
+  }
+
+  if (err.message === "Room number is required") {
+    status = 400;
+    message = "Room number is required";
+  }
+
+  if (err.message === "At least one price is required") {
+    status = 400;
+    message = "At least one price is required";
+  }
+
+  // 401 - Unauthenticated
   if (err.message === "Invalid username or password") {
     status = 401;
     message = "Invalid username or password";
@@ -34,9 +51,15 @@ const errorHandler = (err, req, res, next) => {
     message = "Invalid access token";
   }
 
+  // 404 - Not Found
   if (err.message === "Admin not found") {
     status = 404;
     message = "Admin not found";
+  }
+
+  if (err.message === "Room not found") {
+    status = 404;
+    message = "Room not found";
   }
 
   res.status(status).json({

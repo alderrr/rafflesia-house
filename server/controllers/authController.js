@@ -91,7 +91,7 @@ class authController {
         {
           _id: new ObjectId(id),
         },
-        { projection: { password: 0 } }
+        { projection: { password: 0 } },
       );
 
       if (!foundAdmin) {
