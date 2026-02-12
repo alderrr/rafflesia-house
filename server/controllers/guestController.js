@@ -1,10 +1,11 @@
 const { getDB } = require("../config/db");
-const { ObjectId } = require("mongodb");
+const { ObjectId, ReturnDocument } = require("mongodb");
 
 class guestController {
   static async createGuest(req, res, next) {
     try {
       const { idcard, name } = req.body || {};
+
       if (!idcard) {
         throw new Error("ID Card Number is required");
       }
@@ -37,7 +38,9 @@ class guestController {
     try {
       const db = getDB();
       const guests = db.collection("guests");
+
       const foundGuests = await guests.find({}).toArray();
+
       res.status(200).json(foundGuests);
     } catch (err) {
       next(err);
@@ -46,6 +49,7 @@ class guestController {
   static async getGuest(req, res, next) {
     try {
       const { id } = req.params;
+
       if (!ObjectId.isValid(id)) {
         throw new Error("Guest not found");
       }
@@ -76,13 +80,23 @@ class guestController {
       const db = getDB();
       const guests = db.collection("guests");
 
-      const foundGuest = await guests.findOne({
-        _id: new ObjectId(id),
-      });
+      const updatedGuest = await guests.findOneAndUpdate(
+        {
+          _id: new ObjectId(id),
+        },
+        {
+          $set: {
+            ...(name && { name }),
+            ...(idcard && { idcard }),
+            updatedAt: new Date(),
+          },
+        },
+        { returnDocument: "after" },
+      );
 
-      if (!foundGuest) {
-        throw new Error("Guest not found");
-      }
+      if (!updatedGuest.value) throw new Error("Guest not found");
+
+      res.status(200).json(updatedGuest.value);
     } catch (err) {
       next(err);
     }
@@ -90,6 +104,7 @@ class guestController {
   static async deleteGuest(req, res, next) {
     try {
       const { id } = req.params;
+
       if (!ObjectId.isValid(id)) {
         throw new Error("Guest not found");
       }
@@ -97,13 +112,11 @@ class guestController {
       const db = getDB();
       const guests = db.collection("guests");
 
-      const foundGuest = await guests.findOne({
-        _id: new ObjectId(id),
-      });
+      const deletedGuest = await guests.deleteOne({ _id: new ObjectId(id) });
 
-      if (!foundGuest) {
-        throw new Error("Guest not found");
-      }
+      if (deletedGuest.deletedCount === 0) throw new Error("Guest not found");
+
+      res.status(200).json({ message: "Guest deleted successfully" });
     } catch (err) {
       next(err);
     }

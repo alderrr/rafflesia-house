@@ -7,6 +7,7 @@ class authController {
   static async registerAdmin(req, res, next) {
     try {
       const { username, password } = req.body || {};
+
       if (!username || !password) {
         throw new Error("Username and password are required");
       }
@@ -28,7 +29,7 @@ class authController {
 
       res.status(201).json({
         id: newAdmin.insertedId,
-        username: newAdmin.username,
+        username,
       });
     } catch (err) {
       next(err);

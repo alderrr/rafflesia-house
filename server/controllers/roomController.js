@@ -109,15 +109,11 @@ class roomController {
       const db = getDB();
       const rooms = db.collection("rooms");
 
-      const deletedRoom = await rooms.deleteOne({
-        _id: new ObjectId(id),
-      });
+      const deletedRoom = await rooms.deleteOne({ _id: new ObjectId(id) });
 
       if (deletedRoom.deletedCount === 0) throw new Error("Room not found");
 
-      res.status(200).json({
-        message: "Room deleted successfully",
-      });
+      res.status(200).json({ message: "Room deleted successfully" });
     } catch (err) {
       next(err);
     }

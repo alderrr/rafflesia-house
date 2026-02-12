@@ -4,19 +4,24 @@ const roomController = require("../controllers/roomController");
 const authentication = require("../middlewares/authentication");
 const router = require("express").Router();
 
+// PUBLIC ROUTES
 router.post("/api/admin/login", authController.loginAdmin);
-router.use(authentication);
-router.post("/api/admin/user/register", authController.registerAdmin);
-router.get("/api/admin/user/get/all", authController.getAdmins);
-router.get("/api/admin/user/get/:id", authController.getAdmin);
-router.post("/api/admin/user/delete", authController.deleteAdmin);
-router.post("/api/admin/user/delete/:id", authController.deleteAdmin);
 
-router.post("/api/admin/guest/create", guestController.createGuest);
-router.get("/api/admin/guest/get/all", guestController.getGuests);
-router.get("/api/admin/guest/get/:id", guestController.getGuest);
-router.post("/api/admin/guest/update/:id", guestController.updateGuest);
-router.post("/api/admin/guest/delete/:id", guestController.deleteGuest);
+// PROTECTED ROUTES
+router.use("/api/admin", authentication);
+
+// ADMIN USERS
+router.post("/api/admin/users", authController.registerAdmin);
+router.get("/api/admin/users", authController.getAdmins);
+router.get("/api/admin/users/:id", authController.getAdmin);
+router.delete("/api/admin/users/:id", authController.deleteAdmin);
+
+// ADMIN GUESTS
+router.post("/api/admin/guests", guestController.createGuest);
+router.get("/api/admin/guests", guestController.getGuests);
+router.get("/api/admin/guests/:id", guestController.getGuest);
+router.put("/api/admin/guests/:id", guestController.updateGuest);
+router.delete("/api/admin/guests/:id", guestController.deleteGuest);
 
 // ADMIN ROOMS
 router.post("/api/admin/rooms", roomController.createRoom);
@@ -25,7 +30,8 @@ router.get("/api/admin/rooms/:id", roomController.getRoom);
 router.put("/api/admin/rooms/:id", roomController.updateRoom);
 router.delete("/api/admin/rooms/:id", roomController.deleteRoom);
 
-// PUBLIC
+// PUBLIC ROOMS
 router.get("/api/public/rooms", roomController.getPublicRooms);
+router.get("/api/public/rooms/:id", roomController.getRoom);
 
 module.exports = router;

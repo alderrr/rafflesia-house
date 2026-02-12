@@ -15,6 +15,11 @@ const errorHandler = (err, req, res, next) => {
     message = "Username already exists";
   }
 
+  if (err.message === "Guest already exists") {
+    status = 400;
+    message = "Guest already exists";
+  }
+
   if (err.message === "Room already exists") {
     status = 400;
     message = "Room already exists";
@@ -23,6 +28,11 @@ const errorHandler = (err, req, res, next) => {
   if (err.message === "Room number is required") {
     status = 400;
     message = "Room number is required";
+  }
+
+  if (err.message === "ID Card Number is required") {
+    status = 400;
+    message = "ID Card Number is required";
   }
 
   if (err.message === "At least one price is required") {
@@ -60,6 +70,11 @@ const errorHandler = (err, req, res, next) => {
   if (err.message === "Room not found") {
     status = 404;
     message = "Room not found";
+  }
+
+  if (err.message === "Guest not found") {
+    status = 404;
+    message = "Guest not found";
   }
 
   res.status(status).json({
