@@ -75,7 +75,7 @@ class paymentController {
         );
       }
 
-      if (ty[e === "deposit_return"]) {
+      if (type === "deposit_return") {
         await tenants.updateOne(
           { _id: tenant._id },
           { $set: { depositReturned: true, updatedAt: new Date() } },

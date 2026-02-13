@@ -49,105 +49,105 @@ router.delete(
 // ADMIN GUESTS
 router.post(
   "/api/admin/guests",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   guestController.createGuest,
 );
 router.get(
   "/api/admin/guests",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   guestController.getGuests,
 );
 router.get(
   "/api/admin/guests/:id",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   guestController.getGuest,
 );
 router.put(
   "/api/admin/guests/:id",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   guestController.updateGuest,
 );
 router.delete(
   "/api/admin/guests/:id",
-  authorize(["owner"]),
+  authorization(["owner"]),
   guestController.deleteGuest,
 );
 
 // ADMIN ROOMS
 router.post(
   "/api/admin/rooms",
-  authorize(["owner"]),
+  authorization(["owner"]),
   roomController.createRoom,
 );
 router.get(
   "/api/admin/rooms",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   roomController.getRooms,
 );
 router.get(
   "/api/admin/rooms/:id",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   roomController.getRoom,
 );
 router.put(
   "/api/admin/rooms/:id",
-  authorize(["owner"]),
+  authorization(["owner"]),
   roomController.updateRoom,
 );
 router.delete(
   "/api/admin/rooms/:id",
-  authorize(["owner"]),
+  authorization(["owner"]),
   roomController.deleteRoom,
 );
 
 // ADMIN TENANTS
 router.post(
   "/api/admin/tenants",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   tenantController.createTenant,
 );
 router.get(
   "/api/admin/tenants",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   tenantController.getTenants,
 );
 router.get(
   "/api/admin/tenants/:id",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   tenantController.getTenant,
 );
 router.patch(
   "/api/admin/tenants/:id",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   tenantController.checkoutTenant,
 );
 router.delete(
   "/api/admin/tenants/:id",
-  authorize(["owner"]),
+  authorization(["owner"]),
   tenantController.deleteTenant,
 );
 
 // ADMIN PAYMENTS
 router.post(
   "/api/admin/payments",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   paymentController.createPayment,
 );
 router.get(
   "/api/admin/payments",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   paymentController.getPayments,
 );
 router.get(
   "/api/admin/tenants/:id/payments",
-  authorize(["owner", "staff"]),
+  authorization(["owner", "staff"]),
   paymentController.getTenantPayments,
 );
 
 // ADMIN REPORTS
 router.get(
   "/api/admin/reports/financial",
-  authorize(["owner"]),
+  authorization(["owner"]),
   reportController.financialSummary,
 );
 
