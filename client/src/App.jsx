@@ -1,15 +1,33 @@
-import { useEffect } from "react";
-import api from "./api/api";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import HomePage from "./pages/public/HomePage";
+import LoginPage from "./pages/admin/LoginPage";
+import DashboardPage from "./pages/admin/DashboardPage";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  useEffect(() => {
-    api
-      .get("/health")
-      .then((res) => console.log(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* PUBLIC */}
+        <Route path="/" element={<HomePage />} />
 
-  return <div>Backend connected</div>;
+        {/* LOGIN */}
+        <Route path="/admin/login" element={<LoginPage />} />
+
+        {/* PROTECTED */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
