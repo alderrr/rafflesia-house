@@ -11,6 +11,15 @@ const authorization = require("../middlewares/authorization");
 
 const router = require("express").Router();
 
+// HEALTH CHECK
+router.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date(),
+  });
+});
+
 // PUBLIC ROUTES
 router.post("/api/v1/admin/login", authController.loginAdmin);
 
