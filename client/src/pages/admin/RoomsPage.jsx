@@ -23,6 +23,20 @@ const RoomsPage = () => {
     }
   };
 
+  const handleDelete = async (room) => {
+    const confirmDelete = window.confirm(`Delete room ${room.roomNumber}?`);
+
+    if (!confirmDelete) return;
+
+    try {
+      await api.delete(`/api/v1/admin/rooms/${room._id}`);
+      fetchRooms();
+    } catch (err) {
+      console.error(err);
+      // ALERT Failed to delete room
+    }
+  };
+
   useEffect(() => {
     fetchRooms();
   }, []);
@@ -123,7 +137,10 @@ const RoomsPage = () => {
                       >
                         Edit
                       </button>
-                      <button className="text-red-500 hover:underline">
+                      <button
+                        onClick={() => handleDelete(room)}
+                        className="text-red-500 hover:underline"
+                      >
                         Delete
                       </button>
                     </td>

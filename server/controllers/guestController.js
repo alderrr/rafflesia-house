@@ -4,7 +4,7 @@ const { ObjectId, ReturnDocument } = require("mongodb");
 class guestController {
   static async createGuest(req, res, next) {
     try {
-      const { idcard, name } = req.body || {};
+      const { idcard, name, phone, email } = req.body || {};
 
       if (!idcard) {
         throw new Error("ID Card Number is required");
@@ -21,6 +21,8 @@ class guestController {
       const newGuest = await guests.insertOne({
         idcard: idcard,
         name: name,
+        phone: phone,
+        email: email,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -76,7 +78,7 @@ class guestController {
   static async updateGuest(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, idcard } = req.body || {};
+      const { idcard, name, phone, email } = req.body || {};
 
       if (!ObjectId.isValid(id)) {
         throw new Error("Guest not found");
@@ -100,17 +102,19 @@ class guestController {
         },
         {
           $set: {
-            ...(name && { name }),
             ...(idcard && { idcard }),
+            ...(name && { name }),
+            ...(phone && { phone }),
+            ...(email && { email }),
             updatedAt: new Date(),
           },
         },
         { returnDocument: "after" },
       );
 
-      if (!updatedGuest.value) throw new Error("Guest not found");
+      if (!updatedGuest) throw new Error("Guest not found");
 
-      res.status(200).json(updatedGuest.value);
+      res.status(200).json(updatedGuest);
     } catch (err) {
       next(err);
     }
