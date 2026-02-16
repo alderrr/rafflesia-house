@@ -46,4 +46,4 @@ const createIndexes = async () => {
   }
 };
 
-createIndexes();
+module.exports = createIndexes;
