@@ -123,9 +123,9 @@ class roomController {
         { returnDocument: "after" },
       );
 
-      if (!updatedRoom.value) throw new Error("Room not found");
+      if (!updatedRoom) throw new Error("Room not found");
 
-      res.status(200).json(updatedRoom.value);
+      res.status(200).json(updatedRoom);
     } catch (err) {
       next(err);
     }
