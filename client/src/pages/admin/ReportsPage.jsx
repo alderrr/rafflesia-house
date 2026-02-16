@@ -1,5 +1,9 @@
 const ReportsPage = () => {
-  return <></>;
+  return (
+    <>
+      <div>ReportsPage</div>
+    </>
+  );
 };
 
 export default ReportsPage;

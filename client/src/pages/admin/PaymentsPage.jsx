@@ -1,5 +1,9 @@
 const PaymentsPage = () => {
-  return <></>;
+  return (
+    <>
+      <div>PaymentsPage</div>
+    </>
+  );
 };
 
 export default PaymentsPage;

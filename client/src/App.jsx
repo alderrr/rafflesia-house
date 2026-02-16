@@ -2,9 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import HomePage from "./pages/public/HomePage";
 import LoginPage from "./pages/admin/LoginPage";
+
 import DashboardPage from "./pages/admin/DashboardPage";
+import RoomsPage from "./pages/admin/RoomsPage";
+import GuestsPage from "./pages/admin/GuestsPage";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLayout from "./components/AdminLayout";
 
 function App() {
   return (
@@ -18,13 +22,17 @@ function App() {
 
         {/* PROTECTED */}
         <Route
-          path="/admin/dashboard"
+          path="/admin"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="rooms" element={<RoomsPage />} />
+          <Route path="guests" element={<GuestsPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

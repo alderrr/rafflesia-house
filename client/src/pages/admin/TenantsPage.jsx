@@ -1,5 +1,9 @@
 const TenantsPage = () => {
-  return <></>;
+  return (
+    <>
+      <div>TenantsPage</div>
+    </>
+  );
 };
 
 export default TenantsPage;

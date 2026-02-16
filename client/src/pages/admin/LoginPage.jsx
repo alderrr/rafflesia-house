@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Toastify from "toastify-js";
-
 import api from "../../api/api";
 import { saveToken } from "../../api/auth";
 
