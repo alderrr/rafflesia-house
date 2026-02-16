@@ -9,7 +9,7 @@ class reportController {
       const payments = db.collection("payments");
       const tenants = db.collection("tenants");
 
-      const filter = {};
+      const filter = { isDeleted: { $ne: true } };
       if (start || end) {
         filter.paidAt = {};
         if (start) filter.paidAt.$gte = new Date(start);
@@ -39,6 +39,7 @@ class reportController {
       const today = new Date();
       const overdueTenants = await tenants.countDocuments({
         isActive: true,
+        isDeleted: { $ne: true },
         nextPaymentDate: { $lt: today },
       });
 

@@ -12,147 +12,147 @@ const authorization = require("../middlewares/authorization");
 const router = require("express").Router();
 
 // PUBLIC ROUTES
-router.post("/api/admin/login", authController.loginAdmin);
+router.post("/api/v1/admin/login", authController.loginAdmin);
 
 // PROTECTED ROUTES
-router.use("/api/admin", authentication);
+router.use("/api/v1/admin", authentication);
 
 // ADMIN DASHBOARD
 router.get(
-  "/api/admin/dashboard",
+  "/api/v1/admin/dashboard",
   authorization(["owner", "staff"]),
   dashboardController.getDashboard,
 );
 
 // ADMIN USERS
 router.post(
-  "/api/admin/users",
+  "/api/v1/admin/users",
   authorization(["owner"]),
   authController.registerAdmin,
 );
 router.get(
-  "/api/admin/users",
+  "/api/v1/admin/users",
   authorization(["owner"]),
   authController.getAdmins,
 );
 router.get(
-  "/api/admin/users/:id",
+  "/api/v1/admin/users/:id",
   authorization(["owner"]),
   authController.getAdmin,
 );
 router.delete(
-  "/api/admin/users/:id",
+  "/api/v1/admin/users/:id",
   authorization(["owner"]),
   authController.deleteAdmin,
 );
 
 // ADMIN GUESTS
 router.post(
-  "/api/admin/guests",
+  "/api/v1/admin/guests",
   authorization(["owner", "staff"]),
   guestController.createGuest,
 );
 router.get(
-  "/api/admin/guests",
+  "/api/v1/admin/guests",
   authorization(["owner", "staff"]),
   guestController.getGuests,
 );
 router.get(
-  "/api/admin/guests/:id",
+  "/api/v1/admin/guests/:id",
   authorization(["owner", "staff"]),
   guestController.getGuest,
 );
 router.put(
-  "/api/admin/guests/:id",
+  "/api/v1/admin/guests/:id",
   authorization(["owner", "staff"]),
   guestController.updateGuest,
 );
 router.delete(
-  "/api/admin/guests/:id",
+  "/api/v1/admin/guests/:id",
   authorization(["owner"]),
   guestController.deleteGuest,
 );
 
 // ADMIN ROOMS
 router.post(
-  "/api/admin/rooms",
+  "/api/v1/admin/rooms",
   authorization(["owner"]),
   roomController.createRoom,
 );
 router.get(
-  "/api/admin/rooms",
+  "/api/v1/admin/rooms",
   authorization(["owner", "staff"]),
   roomController.getRooms,
 );
 router.get(
-  "/api/admin/rooms/:id",
+  "/api/v1/admin/rooms/:id",
   authorization(["owner", "staff"]),
   roomController.getRoom,
 );
 router.put(
-  "/api/admin/rooms/:id",
+  "/api/v1/admin/rooms/:id",
   authorization(["owner"]),
   roomController.updateRoom,
 );
 router.delete(
-  "/api/admin/rooms/:id",
+  "/api/v1/admin/rooms/:id",
   authorization(["owner"]),
   roomController.deleteRoom,
 );
 
 // ADMIN TENANTS
 router.post(
-  "/api/admin/tenants",
+  "/api/v1/admin/tenants",
   authorization(["owner", "staff"]),
   tenantController.createTenant,
 );
 router.get(
-  "/api/admin/tenants",
+  "/api/v1/admin/tenants",
   authorization(["owner", "staff"]),
   tenantController.getTenants,
 );
 router.get(
-  "/api/admin/tenants/:id",
+  "/api/v1/admin/tenants/:id",
   authorization(["owner", "staff"]),
   tenantController.getTenant,
 );
 router.patch(
-  "/api/admin/tenants/:id",
+  "/api/v1/admin/tenants/:id",
   authorization(["owner", "staff"]),
   tenantController.checkoutTenant,
 );
 router.delete(
-  "/api/admin/tenants/:id",
+  "/api/v1/admin/tenants/:id",
   authorization(["owner"]),
   tenantController.deleteTenant,
 );
 
 // ADMIN PAYMENTS
 router.post(
-  "/api/admin/payments",
+  "/api/v1/admin/payments",
   authorization(["owner", "staff"]),
   paymentController.createPayment,
 );
 router.get(
-  "/api/admin/payments",
+  "/api/v1/admin/payments",
   authorization(["owner", "staff"]),
   paymentController.getPayments,
 );
 router.get(
-  "/api/admin/tenants/:id/payments",
+  "/api/v1/admin/tenants/:id/payments",
   authorization(["owner", "staff"]),
   paymentController.getTenantPayments,
 );
 
 // ADMIN REPORTS
 router.get(
-  "/api/admin/reports/financial",
+  "/api/v1/admin/reports/financial",
   authorization(["owner"]),
   reportController.financialSummary,
 );
 
 // PUBLIC ROOMS
-router.get("/api/public/rooms", roomController.getPublicRooms);
-router.get("/api/public/rooms/:id", roomController.getRoom);
+router.get("/api/v1/public/rooms", roomController.getPublicRooms);
+router.get("/api/v1/public/rooms/:id", roomController.getRoom);
 
 module.exports = router;

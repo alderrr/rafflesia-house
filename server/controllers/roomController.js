@@ -91,9 +91,35 @@ class roomController {
       const db = getDB();
       const rooms = db.collection("rooms");
 
+      const allowed = [
+        "roomNumber",
+        "title",
+        "description",
+        "priceDaily",
+        "priceMonthly",
+        "depositAmount",
+        "facilities",
+        "size",
+        "floor",
+      ];
+
+      const patch = {};
+      for (const key of allowed) {
+        if (req.body?.[key] !== undefined) patch[key] = req.body[key];
+      }
+
+      if (patch.priceDaily !== undefined)
+        patch.priceDaily = Number(patch.priceDaily) || null;
+      if (patch.priceMonthly !== undefined)
+        patch.priceMonthly = Number(patch.priceMonthly) || null;
+      if (patch.depositAmount !== undefined)
+        patch.depositAmount = Number(patch.depositAmount) || 0;
+      if (patch.size !== undefined) patch.size = Number(patch.size) || null;
+      if (patch.floor !== undefined) patch.floor = Number(patch.floor) || null;
+
       const updatedRoom = await rooms.findOneAndUpdate(
-        { _id: new ObjectId(id) },
-        { $set: { ...req.body, updatedAt: new Date() } },
+        { _id: new ObjectId(id), isDeleted: { $ne: true } },
+        { $set: { ...patch, updatedAt: new Date() } },
         { returnDocument: "after" },
       );
 

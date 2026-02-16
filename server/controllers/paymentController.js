@@ -1,4 +1,4 @@
-const { getDB } = require("../config/db");
+const { getDB, getClient } = require("../config/db");
 const { ObjectId } = require("mongodb");
 
 const addDays = (date, days) => {
@@ -15,6 +15,9 @@ const addMonths = (date, months) => {
 
 class paymentController {
   static async createPayment(req, res, next) {
+    const client = getClient();
+    const session = client.startSession();
+
     try {
       const { tenantId, type, amount, paidAt, note } = req.body || {};
 
@@ -36,58 +39,79 @@ class paymentController {
       const guests = db.collection("guests");
       const payments = db.collection("payments");
 
-      const tenant = await tenants.findOne({ _id: new ObjectId(tenantId) });
-      if (!tenant) throw new Error("Tenant not found");
+      let insertedId;
 
-      const [room, guest] = await Promise.all([
-        rooms.findOne({ _id: tenant.roomId }),
-        guests.findOne({ _id: tenant.guestId }),
-      ]);
-      if (!room) throw new Error("Room not found");
-      if (!guest) throw new Error("Guest not found");
-
-      const paymentDoc = {
-        tenantId: new ObjectId(tenantId),
-        guestId: tenant.guestId,
-        roomId: tenant.roomId,
-        type,
-        amount: Number(amount),
-        paidAt: paidAt ? new Date(paidAt) : new Date(),
-        note: note || null,
-        createdAt: new Date(),
-      };
-
-      const inserted = await payments.insertOne(paymentDoc);
-
-      if (type === "rent" && tenant.isActive) {
-        const currentNext = tenant.nextPaymentDate
-          ? new Date(tenant.nextPaymentDate)
-          : new Date();
-
-        const nextPaymentDate =
-          tenant.paymentType === "daily"
-            ? addDays(currentNext, 1)
-            : addMonths(currentNext, 1);
-
-        await tenants.updateOne(
-          { _id: tenant._id },
-          { $set: { nextPaymentDate, updatedAt: new Date() } },
+      await session.withTransaction(async () => {
+        const tenant = await tenants.findOne(
+          {
+            _id: new ObjectId(tenantId),
+            isDeleted: { $ne: true },
+          },
+          { session },
         );
-      }
+        if (!tenant) throw new Error("Tenant not found");
 
-      if (type === "deposit_return") {
-        await tenants.updateOne(
-          { _id: tenant._id },
-          { $set: { depositReturned: true, updatedAt: new Date() } },
-        );
-      }
+        const [room, guest] = await Promise.all([
+          rooms.findOne(
+            { _id: tenant.roomId, isDeleted: { $ne: true } },
+            { session },
+          ),
+          guests.findOne(
+            { _id: tenant.guestId, isDeleted: { $ne: true } },
+            { session },
+          ),
+        ]);
+        if (!room) throw new Error("Room not found");
+        if (!guest) throw new Error("Guest not found");
 
-      res.status(201).json({
-        id: inserted.insertedId,
-        message: "Payment recorded successfully",
+        const paymentDoc = {
+          tenantId: new ObjectId(tenantId),
+          guestId: tenant.guestId,
+          roomId: tenant.roomId,
+          type,
+          amount: Number(amount),
+          paidAt: paidAt ? new Date(paidAt) : new Date(),
+          note: note || null,
+          createdAt: new Date(),
+        };
+
+        const inserted = await payments.insertOne(paymentDoc, { session });
+        insertedId = inserted.insertedId;
+
+        if (type === "rent" && tenant.isActive) {
+          const currentNext = tenant.nextPaymentDate
+            ? new Date(tenant.nextPaymentDate)
+            : new Date();
+
+          const nextPaymentDate =
+            tenant.paymentType === "daily"
+              ? addDays(currentNext, 1)
+              : addMonths(currentNext, 1);
+
+          await tenants.updateOne(
+            { _id: tenant._id },
+            { $set: { nextPaymentDate, updatedAt: new Date() } },
+            { session },
+          );
+        }
+
+        if (type === "deposit_return") {
+          await tenants.updateOne(
+            { _id: tenant._id },
+            { $set: { depositReturned: true, updatedAt: new Date() } },
+            { session },
+          );
+        }
+
+        res.status(201).json({
+          id: insertedId,
+          message: "Payment recorded successfully",
+        });
       });
     } catch (err) {
       next(err);
+    } finally {
+      await session.endSession();
     }
   }
   static async getPayments(req, res, next) {

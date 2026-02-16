@@ -76,12 +76,23 @@ class guestController {
   static async updateGuest(req, res, next) {
     try {
       const { id } = req.params;
+      const { name, idcard } = req.body || {};
+
       if (!ObjectId.isValid(id)) {
         throw new Error("Guest not found");
       }
 
       const db = getDB();
       const guests = db.collection("guests");
+
+      if (idcard) {
+        const existing = await guests.findOne({
+          idcard,
+          _id: { $ne: new ObjectId(id) },
+          isDeleted: { $ne: true },
+        });
+        if (existing) throw new Error("Guest already exists");
+      }
 
       const updatedGuest = await guests.findOneAndUpdate(
         {

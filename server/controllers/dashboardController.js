@@ -34,7 +34,7 @@ class dashboardController {
           {
             $group: {
               _id: null,
-              totalDeposit: { sum: "$depositPaid" },
+              totalDeposit: { $sum: "$depositPaid" },
             },
           },
         ])
