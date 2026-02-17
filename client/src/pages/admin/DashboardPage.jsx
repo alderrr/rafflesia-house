@@ -12,10 +12,9 @@ const DashboardPage = () => {
     totalDepositHeld: 0,
     monthlyRevenueProjection: 0,
   });
-
   const fetchDashboard = async () => {
     try {
-      const response = await api.get("api/v1/admin/dashboard");
+      const response = await api.get("/api/v1/admin/dashboard");
       setStats(response.data);
     } catch (err) {
       console.error(err);
@@ -29,13 +28,12 @@ const DashboardPage = () => {
     fetchDashboard();
   }, []);
 
-  if (loading) {
-    return <div className="text-gray-500">Loading dashboard...</div>;
-  }
+  const formatCurrency = (value) => {
+    return "Rp " + Number(value).toLocaleString();
+  };
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
+  if (loading) return <div className="text-gray-500">Loading dashboard...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <>
@@ -43,8 +41,17 @@ const DashboardPage = () => {
         <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
         <div className="grid grid-cols-4 gap-4">
           <Card title="Total Rooms" value={stats.totalRooms} />
+          <Card title="Available Rooms" value={stats.availableRooms} />
+          <Card title="Occupied Rooms" value={stats.occupiedRooms} />
           <Card title="Active Tenants" value={stats.activeTenants} />
-          {/* ADD HERE */}
+          <Card
+            title="Deposit Held"
+            value={formatCurrency(stats.totalDepositHeld)}
+          />
+          <Card
+            title="Monthly Revenue"
+            value={formatCurrency(stats.monthlyRevenueProjection)}
+          />
         </div>
       </div>
     </>
@@ -53,12 +60,10 @@ const DashboardPage = () => {
 
 const Card = ({ title, value }) => {
   return (
-    <>
-      <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
-        <div className="text-gray-400">{title}</div>
-        <div className="text-3xl font-bold mt-2">{value}</div>
-      </div>
-    </>
+    <div className="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+      <div className="text-gray-400">{title}</div>
+      <div className="text-3xl font-bold mt-2">{value}</div>
+    </div>
   );
 };
 
