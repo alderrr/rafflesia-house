@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import CreateGuestModal from "../../components/CreateGuestModal";
+import EditGuestModal from "../../components/EditGuestModal";
 import api from "../../api/api";
 
 const GuestsPage = () => {
@@ -7,6 +8,8 @@ const GuestsPage = () => {
   const [error, setError] = useState(null);
   const [guests, setGuests] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedGuest, setSelectedGuest] = useState(null);
 
   const fetchGuests = async () => {
     try {
@@ -80,7 +83,15 @@ const GuestsPage = () => {
                     <td className="p-3">{guest.phone}</td>
                     <td className="p-3">{guest.email}</td>
                     <td className="p-3 space-x-3">
-                      <button className="text-blue-500">Edit</button>
+                      <button
+                        onClick={() => {
+                          setSelectedGuest(guest);
+                          setShowEditModal(true);
+                        }}
+                        className="text-blue-500"
+                      >
+                        Edit
+                      </button>
                       <button
                         onClick={() => handleDelete(guest)}
                         className="text-red-500"
@@ -100,6 +111,13 @@ const GuestsPage = () => {
       {showModal && (
         <CreateGuestModal
           onClose={() => setShowModal(false)}
+          onSuccess={fetchGuests}
+        />
+      )}
+      {showEditModal && (
+        <EditGuestModal
+          guest={selectedGuest}
+          onClose={() => setShowEditModal(false)}
           onSuccess={fetchGuests}
         />
       )}
