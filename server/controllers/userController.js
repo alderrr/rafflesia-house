@@ -52,7 +52,7 @@ class UserController {
   static async updateUsers(req, res, next) {
     try {
       const { id } = req.params;
-      const { username, role } = req.body;
+      const { role } = req.body;
 
       const user = await User.findByPk(id);
 
@@ -63,7 +63,6 @@ class UserController {
       }
 
       await user.update({
-        username,
         role,
       });
 

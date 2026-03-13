@@ -4,11 +4,17 @@ const router = express.Router();
 const UserController = require("../controllers/userController");
 const AuthMiddleware = require("../middleware/authMiddleware");
 const AdminMiddleware = require("../middleware/adminMiddleware");
+const validate = require("../middleware/validate");
+const {
+  createUserSchema,
+  updateUserSchema,
+} = require("../validators/userValidator");
 
 router.post(
   "/",
   AuthMiddleware.authenticate,
   AdminMiddleware.onlyAdmin,
+  validate(createUserSchema),
   UserController.createUser,
 );
 
@@ -23,6 +29,7 @@ router.put(
   "/:id",
   AuthMiddleware.authenticate,
   AdminMiddleware.onlyAdmin,
+  validate(updateUserSchema),
   UserController.updateUsers,
 );
 
