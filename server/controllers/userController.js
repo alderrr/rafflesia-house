@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { User } = require("../models");
 const { hashPassword } = require("../utils/password");
 const AppError = require("../utils/AppError");
@@ -38,11 +39,44 @@ class UserController {
 
   static async getUsers(req, res, next) {
     try {
-      const users = await User.findAll({
+      let { page = 1, limit = 10, search = "" } = req.query;
+
+      page = parseInt(page);
+      limit = parseInt(limit);
+
+      const offset = (page - 1) * limit;
+
+      const whereCondition = {
+        isActive: true,
+        username: {
+          [Op.iLike]: `%${search}%`,
+        },
+      };
+
+      const { rows, count } = await User.findAndCountAll({
+        where: whereCondition,
         attributes: ["id", "username", "role", "isActive", "createdAt"],
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]],
       });
 
-      return res.json(users);
+      return res.json({
+        status: "success",
+        data: rows,
+        meta: {
+          total: count,
+          page,
+          limit,
+          totalPages: Math.ceil(count / limit),
+        },
+      });
+
+      // const users = await User.findAll({
+      //   attributes: ["id", "username", "role", "isActive", "createdAt"],
+      // });
+
+      // return res.json(users);
     } catch (err) {
       next(err);
     }
@@ -70,6 +104,7 @@ class UserController {
       next(err);
     }
   }
+
   static async deleteUsers(req, res, next) {
     try {
       const { id } = req.params;
