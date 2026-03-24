@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const { hashPassword } = require("../utils/password");
+const AppError = require("../utils/AppError");
 
 class UserController {
   static async createUser(req, res, next) {
@@ -11,9 +12,7 @@ class UserController {
       });
 
       if (existingUser) {
-        return res.status(400).json({
-          message: "Username already exists",
-        });
+        throw new AppError("Username already exists", 400);
       }
 
       const hashedPassword = await hashPassword(password);
@@ -57,9 +56,7 @@ class UserController {
       const user = await User.findByPk(id);
 
       if (!user) {
-        return res.status(404).json({
-          message: "User not found",
-        });
+        throw new AppError("User not found", 404);
       }
 
       await user.update({
@@ -80,9 +77,7 @@ class UserController {
       const user = await User.findByPk(id);
 
       if (!user) {
-        return res.status(404).json({
-          message: "User not found",
-        });
+        throw new AppError("User not found", 404);
       }
 
       await user.update({
