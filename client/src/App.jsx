@@ -1,12 +1,21 @@
 import { Routes, Route } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
+
+import HomePage from "./pages/HomePage";
+import RoomsPage from "./pages/RoomsPage";
+import LocationPage from "./pages/LocationPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<h1>Homepage</h1>} />
-      <Route path="/rooms" element={<h1>Room List</h1>} />
-      <Route path="/location" element={<h1>Location</h1>} />
-      <Route path="/contact" element={<h1>Contact</h1>} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/rooms" element={<RoomsPage />} />
+        <Route path="/location" element={<LocationPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+      </Route>
+
       <Route path="/login" element={<h1>Login</h1>} />
     </Routes>
   );
