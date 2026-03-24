@@ -1,9 +1,10 @@
-const { User } = require("../models");
+const { User, RefreshToken } = require("../models");
 const { comparePassword } = require("../utils/password");
-const { generateToken } = require("../utils/jwt");
+const { generateAccessToken, generateRefreshToken } = require("../utils/jwt");
+const AppError = require("../utils/AppError");
 
 class AuthController {
-  static async login(req, res) {
+  static async login(req, res, next) {
     try {
       const { username, password } = req.body;
 
@@ -11,34 +12,77 @@ class AuthController {
         where: { username, isActive: true },
       });
 
-      if (!user) {
-        return res.status(401).json({
-          message: "Invalid username or password",
-        });
-      }
+      if (!user) throw new AppError("Invalid username or password", 401);
 
       const validPassword = await comparePassword(password, user.password);
+      if (!validPassword)
+        throw new AppError("Invalid username or password", 401);
 
-      if (!validPassword) {
-        return res.status(401).json({
-          message: "Invalid username or password",
-        });
-      }
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
 
-      const token = generateToken(user);
+      await RefreshToken.create({
+        token: refreshToken,
+        userId: user.id,
+      });
 
       return res.json({
-        token,
-        user: {
-          id: user.id,
-          username: user.username,
-          role: user.role,
+        status: "success",
+        data: {
+          accessToken,
+          refreshToken,
         },
       });
     } catch (err) {
-      return res.status(500).json({
-        message: err.message,
+      next(err);
+    }
+  }
+
+  static async refresh(req, res, next) {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) throw new AppError("Refresh token required", 401);
+
+      const stored = await RefreshToken.findOne({
+        where: { token: refreshToken },
       });
+
+      if (!stored) throw new AppError("Invalid refresh token", 403);
+
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+      const user = await User.findByPk(decoded.id);
+
+      if (!user || !user.isActive) throw new AppError("User not valid", 403);
+
+      const newAccessToken = generateAccessToken(user);
+
+      return res.json({
+        status: "success",
+        data: {
+          accessToken: newAccessToken,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async logout(req, res, next) {
+    try {
+      const { refreshToken } = req.body;
+
+      await RefreshToken.destroy({
+        where: { token: refreshToken },
+      });
+
+      return res.json({
+        status: "success",
+        message: "Logged out",
+      });
+    } catch (err) {
+      next(err);
     }
   }
 }

@@ -48,9 +48,11 @@ class UserController {
 
       const whereCondition = {
         isActive: true,
-        username: {
-          [Op.iLike]: `%${search}%`,
-        },
+        ...(search && {
+          username: {
+            [Op.iLike]: `%${search}%`,
+          },
+        }),
       };
 
       const { rows, count } = await User.findAndCountAll({
@@ -71,12 +73,6 @@ class UserController {
           totalPages: Math.ceil(count / limit),
         },
       });
-
-      // const users = await User.findAll({
-      //   attributes: ["id", "username", "role", "isActive", "createdAt"],
-      // });
-
-      // return res.json(users);
     } catch (err) {
       next(err);
     }
