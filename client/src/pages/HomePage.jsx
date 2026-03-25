@@ -154,6 +154,63 @@ function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* SOFT SECTION DIVIDER */}
+      <div className="h-px bg-[var(--color-border)] opacity-40"></div>
+
+      {/* TESTIMONIALS */}
+      <div className="space-y-8">
+        <h2 className="text-2xl font-semibold text-[var(--color-primary)]">
+          What Our Residents Say
+        </h2>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Card 1 */}
+          <div className="card-base p-5 space-y-3 hover:shadow-lg transition">
+            <div className="text-yellow-500 text-sm">★★★★★</div>
+
+            <p className="text-sm text-[var(--color-text-muted)]">
+              The experience of staying here was pleasant and comfortable, the
+              room was clean, the bed was soft, the AC was cold, the water was
+              clean and smooth, there was a living room on the terrace, complete
+              with a common kitchen.
+            </p>
+
+            <p className="text-sm font-medium">- Fajar Juniaty</p>
+          </div>
+
+          {/* Card 2 */}
+          <div className="card-base p-5 space-y-3 hover:shadow-lg transition">
+            <div className="text-yellow-500 text-sm">★★★★★</div>
+
+            <p className="text-sm text-[var(--color-text-muted)]">
+              A very clean and comfortable boarding house. The caretaker is very
+              friendly.
+            </p>
+
+            <p className="text-sm font-medium">- Tri Judi</p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="card-base p-5 space-y-3 hover:shadow-lg transition">
+            <div className="text-yellow-500 text-sm">★★★★★</div>
+
+            <p className="text-sm text-[var(--color-text-muted)]">
+              Comfortable, safe, clean, and sharia-compliant boarding house.
+              Each floor has a pantry and lounge area.
+            </p>
+
+            <p className="text-sm font-medium">- Zee Aziespri</p>
+          </div>
+        </div>
+        <a
+          href="https://maps.app.goo.gl/7i1U2dcTYtTDxtUU6"
+          target="_blank"
+          className="text-sm text-[var(--color-primary)] hover:underline"
+        >
+          View all reviews on Google →
+        </a>
+      </div>
     </div>
   );
 }
