@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Snowflake } from "lucide-react";
 import api from "../services/api";
 
 function RoomsPage() {
@@ -15,72 +17,110 @@ function RoomsPage() {
           setRooms(res.data.data);
         }
       } catch (error) {
-        console.error("Failed to fetch rooms:", error);
+        console.error(error);
       } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        if (mounted) setLoading(false);
       }
     };
 
     loadRooms();
 
-    return () => {
-      mounted = false;
-    };
+    return () => (mounted = false);
   }, []);
 
-  if (loading) {
-    return <p>Loading rooms...</p>;
-  }
+  if (loading) return <p>Loading rooms...</p>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Available Rooms</h1>
+    <div className="space-y-10">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-semibold text-[var(--color-primary)]">
+          Available Rooms
+        </h1>
+        <p className="text-[var(--color-text-muted)]">
+          Find your comfortable space at Rafflesia House
+        </p>
+      </div>
 
-      {rooms.length === 0 ? (
-        <p>No rooms available yet.</p>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {rooms.map((room) => (
-            <div key={room.id} className="card-base overflow-hidden">
+      {/* Grid */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {rooms.map((room) => (
+          <Link
+            to={`/rooms/${room.id}`}
+            key={room.id}
+            className="card-base overflow-hidden transition hover:shadow-lg hover:-translate-y-1 block"
+          >
+            {/* Image */}
+            <div className="relative">
               <img
                 src={
-                  room.photos?.[0] ||
-                  "https://placehold.co/600x400?text=No+Image"
+                  room.photos?.[0] || "https://placehold.co/600x400?text=Room"
                 }
                 alt={room.name}
+                loading="lazy"
                 className="w-full h-48 object-cover"
               />
 
-              <div className="p-4">
-                <h2 className="text-lg font-bold mb-2">{room.name}</h2>
+              {/* Availability badge */}
+              <span
+                className={`absolute top-3 left-3 text-xs px-3 py-1 rounded-full font-medium ${
+                  room.isAvailable
+                    ? "bg-white text-[var(--color-primary)]"
+                    : "bg-gray-200 text-gray-500"
+                }`}
+              >
+                {room.isAvailable ? "Available" : "Unavailable"}
+              </span>
 
-                <p className="text-sm text-gray-600 mb-1">
-                  Daily: Rp {Number(room.priceDaily).toLocaleString("id-ID")}
+              {/* AC badge */}
+              {room.hasAC && (
+                <span className="absolute top-3 right-3 bg-white px-2 py-1 rounded-full shadow text-xs flex items-center gap-1">
+                  <Snowflake size={14} />
+                  AC
+                </span>
+              )}
+            </div>
+
+            {/* Content */}
+            <div className="p-4 space-y-3">
+              <h2 className="text-lg font-semibold">{room.name}</h2>
+
+              {/* Pricing */}
+              <div>
+                <p className="text-sm text-[var(--color-text-muted)]">Daily</p>
+                <p className="font-semibold text-[var(--color-primary)]">
+                  Rp {Number(room.priceDaily).toLocaleString("id-ID")}
                 </p>
 
-                <p className="text-sm text-gray-600 mb-1">
-                  Monthly: Rp{" "}
-                  {Number(room.priceMonthly).toLocaleString("id-ID")}
+                <p className="text-sm text-[var(--color-text-muted)] mt-1">
+                  Monthly
                 </p>
-
-                <p className="text-sm mb-1">{room.hasAC ? "AC" : "Non AC"}</p>
-
-                <p
-                  className={`text-sm font-medium ${
-                    room.isAvailable
-                      ? "text-[var(--color-secondary)]"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {room.isAvailable ? "Available" : "Not Available"}
+                <p className="font-semibold">
+                  Rp {Number(room.priceMonthly).toLocaleString("id-ID")}
                 </p>
               </div>
+
+              {/* CTA */}
+              {room.isAvailable ? (
+                <a
+                  href="https://wa.me/6281349785960"
+                  target="_blank"
+                  className="btn-primary w-full text-center block mt-2"
+                >
+                  Book via WhatsApp
+                </a>
+              ) : (
+                <button
+                  disabled
+                  className="w-full bg-gray-200 text-gray-500 py-2 rounded mt-2"
+                >
+                  Not Available
+                </button>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

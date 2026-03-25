@@ -7,6 +7,8 @@ const AdminMiddleware = require("../middleware/adminMiddleware");
 
 router.get("/", RoomController.getPublicRooms);
 
+router.get("/:id", RoomController.getRoomById);
+
 router.get(
   "/admin",
   AuthMiddleware.authenticate,

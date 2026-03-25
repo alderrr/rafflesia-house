@@ -56,6 +56,25 @@ class RoomController {
     }
   }
 
+  static async getRoomById(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      const room = await Room.findByPk(id);
+
+      if (!room) {
+        throw new AppError("Room not found", 404);
+      }
+
+      return res.json({
+        status: "success",
+        data: room,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async updateRoom(req, res, next) {
     try {
       const { id } = req.params;
