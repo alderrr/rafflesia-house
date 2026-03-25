@@ -43,10 +43,7 @@ function RoomsPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {rooms.map((room) => (
-            <div
-              key={room.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden border"
-            >
+            <div key={room.id} className="card-base overflow-hidden">
               <img
                 src={
                   room.photos?.[0] ||
@@ -72,7 +69,9 @@ function RoomsPage() {
 
                 <p
                   className={`text-sm font-medium ${
-                    room.isAvailable ? "text-green-600" : "text-red-500"
+                    room.isAvailable
+                      ? "text-[var(--color-secondary)]"
+                      : "text-gray-500"
                   }`}
                 >
                   {room.isAvailable ? "Available" : "Not Available"}

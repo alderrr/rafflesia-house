@@ -14,7 +14,7 @@ function HomePage() {
         <div className="flex gap-3">
           <Link
             to="/rooms"
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg"
+            className="bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-white px-5 py-2 rounded-lg"
           >
             View Rooms
           </Link>

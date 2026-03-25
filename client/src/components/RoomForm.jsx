@@ -47,7 +47,7 @@ function RoomForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow mb-6">
+    <form onSubmit={handleSubmit} className="card-base p-4 mb-6">
       <h2 className="font-semibold mb-3">Add Room</h2>
 
       <input

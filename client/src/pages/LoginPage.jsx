@@ -30,10 +30,7 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded-lg shadow-md w-80"
-      >
+      <form onSubmit={handleLogin} className="card-base p-4">
         <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
 
         <input
@@ -52,10 +49,7 @@ function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded"
-        >
+        <button type="submit" className="btn-primary w-full">
           Login
         </button>
       </form>

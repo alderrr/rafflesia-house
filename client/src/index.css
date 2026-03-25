@@ -1,1 +1,50 @@
 @import "tailwindcss";
+
+/* 🌿 Theme */
+:root {
+  --color-bg: #ece8dd;
+  --color-surface: #ffffff;
+  --color-primary: #593924;
+  --color-secondary: #74572d;
+  --color-accent: #9f9c97;
+  --color-border: #ccc4af;
+  --color-text: #2b2b2b;
+  --color-text-muted: #6b6b6b;
+}
+
+/* Global */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--color-secondary);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 600;
+}
+
+/* Cards */
+.card-base {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}

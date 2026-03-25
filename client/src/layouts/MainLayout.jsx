@@ -4,16 +4,19 @@ function MainLayout() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navbar */}
-      <nav className="bg-white shadow-md">
+      <nav className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
         <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-bold">Rafflesia House</h1>
-
-          <div className="flex gap-6">
+          <h1 className="text-xl font-bold text-[var(--color-primary)]">
+            Rafflesia House
+          </h1>
+          <div className="flex gap-6 text-[var(--color-text-muted)]">
             <Link to="/">Home</Link>
             <Link to="/rooms">Rooms</Link>
-            <Link to="/location">Location</Link>
             <Link to="/contact">Contact</Link>
-            <Link to="/login" className="text-blue-600 font-semibold">
+            <Link
+              to="/login"
+              className="text-[var(--color-primary)] font-semibold"
+            >
               Login
             </Link>
           </div>

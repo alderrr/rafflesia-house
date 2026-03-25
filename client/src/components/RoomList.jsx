@@ -33,7 +33,7 @@ function RoomList() {
   };
 
   return (
-    <div className="bg-white p-4 rounded shadow">
+    <div className="card-base p-4">
       <h2 className="font-semibold mb-3">Room List</h2>
 
       {rooms.map((room) => (
