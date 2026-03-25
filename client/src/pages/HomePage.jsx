@@ -1,27 +1,157 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { GraduationCap, Car, Leaf } from "lucide-react";
+import api from "../services/api";
 
 function HomePage() {
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    const loadRooms = async () => {
+      try {
+        const res = await api.get("/rooms");
+        setRooms(res.data.data.slice(0, 3)); // show only 3
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    loadRooms();
+  }, []);
+
   return (
-    <div className="py-10">
-      <div className="bg-white rounded-2xl shadow-md p-8">
-        <h1 className="text-3xl font-bold mb-4">Welcome to Rafflesia House</h1>
+    <div className="space-y-20">
+      {/* HERO */}
+      <div className="relative overflow-hidden rounded-2xl">
+        {/* Background Image */}
+        <img
+          src="https://placehold.co/1200x600?text=Rafflesia+House"
+          className="w-full h-[400px] md:h-[500px] object-cover"
+        />
 
-        <p className="text-gray-600 mb-6">
-          Comfortable boarding house with practical facilities and affordable
-          pricing.
-        </p>
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40"></div>
 
-        <div className="flex gap-3">
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 text-white max-w-3xl">
+          <h1 className="text-3xl md:text-5xl font-semibold leading-tight fade-up">
+            Your Perfect Stay in Palembang
+          </h1>
+
+          <p className="mt-4 text-white/90 text-lg fade-up fade-up-delay-1">
+            Comfortable, strategic, and peaceful living at Rafflesia House.
+          </p>
+
+          <div className="flex gap-3 mt-6 flex-wrap fade-up fade-up-delay-2">
+            <Link to="/rooms" className="btn-primary">
+              View Rooms
+            </Link>
+
+            <a
+              href="https://wa.me/6281349785960"
+              target="_blank"
+              className="bg-white/90 text-black px-4 py-2 rounded-xl font-medium hover:bg-white transition"
+            >
+              Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* SELLING POINTS */}
+      <div className="grid gap-6 md:grid-cols-3 mt-6">
+        {/* Academic */}
+        <div className="card-base p-6 space-y-3 text-center hover:shadow-lg hover:-translate-y-1 transition fade-up">
+          <div className="flex justify-center">
+            <GraduationCap size={28} className="text-[var(--color-primary)]" />
+          </div>
+
+          <h3 className="font-semibold text-lg">Academic Convenience</h3>
+
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Minutes from Muhammadiyah University of Palembang, Bina Darma
+            University, and Sriwijaya University.
+          </p>
+        </div>
+
+        {/* Connectivity */}
+        <div className="card-base p-6 space-y-3 text-center hover:shadow-lg hover:-translate-y-1 transition fade-up fade-up-delay-1">
+          <div className="flex justify-center">
+            <Car size={28} className="text-[var(--color-primary)]" />
+          </div>
+
+          <h3 className="font-semibold text-lg">Easy Connectivity</h3>
+
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Close to PT KAI, major roads, and public transport options.
+          </p>
+        </div>
+
+        {/* Comfort */}
+        <div className="card-base p-6 space-y-3 text-center hover:shadow-lg hover:-translate-y-1 transition fade-up fade-up-delay-2">
+          <div className="flex justify-center">
+            <Leaf size={28} className="text-[var(--color-primary)]" />
+          </div>
+
+          <h3 className="font-semibold text-lg">Peaceful Living</h3>
+
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Quiet neighborhood with a safe and friendly community.
+          </p>
+        </div>
+      </div>
+
+      {/* SOFT SECTION DIVIDER */}
+      <div className="h-px bg-[var(--color-border)] opacity-40"></div>
+
+      {/* FEATURED ROOMS */}
+      <div className="space-y-8 fade-up">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-semibold text-[var(--color-primary)]">
+            Featured Rooms
+          </h2>
+
           <Link
             to="/rooms"
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-secondary)] text-white px-5 py-2 rounded-lg"
+            className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-primary)] transition"
           >
-            View Rooms
+            View all →
           </Link>
+        </div>
 
-          <Link to="/contact" className="border px-5 py-2 rounded-lg">
-            Contact Us
-          </Link>
+        <div className="grid gap-6 md:grid-cols-3">
+          {rooms.map((room, index) => (
+            <Link
+              to={`/rooms/${room.id}`}
+              key={room.id}
+              className="card-base overflow-hidden transition hover:shadow-lg hover:-translate-y-1 block"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <img
+                src={room.photos?.[0] || "https://placehold.co/600x400"}
+                loading="lazy"
+                className="w-full h-44 object-cover"
+              />
+
+              <div className="p-4 space-y-2">
+                <h3 className="font-semibold">{room.name}</h3>
+
+                <p className="text-sm text-[var(--color-text-muted)]">
+                  Rp {Number(room.priceMonthly).toLocaleString("id-ID")} / month
+                </p>
+
+                <span
+                  className={`text-xs ${
+                    room.isAvailable
+                      ? "text-[var(--color-secondary)]"
+                      : "text-gray-400"
+                  }`}
+                >
+                  {room.isAvailable ? "Available" : "Unavailable"}
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
