@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Snowflake, ArrowLeft } from "lucide-react";
+import ImageSlider from "../components/ImageSlider";
 import api from "../services/api";
 
 function RoomDetailPage() {
@@ -51,12 +52,13 @@ function RoomDetailPage() {
 
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="card-base overflow-hidden">
-          <img
+          <ImageSlider images={room.photos} />
+          {/* <img
             src={room.photos?.[0] || "https://placehold.co/1000x700?text=Room"}
             alt={room.name}
             loading="lazy"
             className="w-full h-[320px] md:h-[420px] object-cover"
-          />
+          /> */}
         </div>
 
         <div className="card-base p-6 space-y-4">

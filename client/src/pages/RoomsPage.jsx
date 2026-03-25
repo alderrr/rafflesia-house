@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Snowflake } from "lucide-react";
+import ImageSlider from "../components/ImageSlider";
 import api from "../services/api";
 
 function RoomsPage() {
@@ -52,14 +53,15 @@ function RoomsPage() {
           >
             {/* Image */}
             <div className="relative">
-              <img
+              <ImageSlider images={room.photos} />
+              {/* <img
                 src={
                   room.photos?.[0] || "https://placehold.co/600x400?text=Room"
                 }
                 alt={room.name}
                 loading="lazy"
                 className="w-full h-48 object-cover"
-              />
+              /> */}
 
               {/* Availability badge */}
               <span
