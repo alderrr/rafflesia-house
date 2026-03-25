@@ -23,7 +23,25 @@ class RoomController {
     }
   }
 
-  static async getRooms(req, res, next) {
+  static async getPublicRooms(req, res, next) {
+    try {
+      const rooms = await Room.findAll({
+        where: {
+          isAvailable: true,
+        },
+        order: [["createdAt", "DESC"]],
+      });
+
+      return res.json({
+        status: "success",
+        data: rooms,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getAdminRooms(req, res, next) {
     try {
       const rooms = await Room.findAll({
         order: [["createdAt", "DESC"]],

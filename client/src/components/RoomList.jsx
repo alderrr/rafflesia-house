@@ -5,7 +5,7 @@ function RoomList() {
   const [rooms, setRooms] = useState([]);
 
   const fetchRooms = async () => {
-    const res = await api.get("/rooms");
+    const res = await api.get("/rooms/admin");
     setRooms(res.data.data);
   };
 
@@ -14,7 +14,7 @@ function RoomList() {
 
     const load = async () => {
       try {
-        const res = await api.get("/rooms");
+        const res = await api.get("/rooms/admin");
         setRooms(res.data.data);
       } catch (err) {
         console.error(err);
