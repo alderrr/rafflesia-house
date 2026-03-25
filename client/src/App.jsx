@@ -1,10 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
+import AdminPage from "./pages/AdminPage";
 import HomePage from "./pages/HomePage";
 import RoomsPage from "./pages/RoomsPage";
 import LocationPage from "./pages/LocationPage";
 import ContactPage from "./pages/ContactPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -16,7 +19,15 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
       </Route>
 
-      <Route path="/login" element={<h1>Login</h1>} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
