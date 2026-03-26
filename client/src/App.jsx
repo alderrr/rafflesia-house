@@ -7,7 +7,7 @@ import HomePage from "./pages/HomePage";
 import RoomsPage from "./pages/RoomsPage";
 import RoomDetailPage from "./pages/RoomDetailPage";
 import LocationPage from "./pages/LocationPage";
-import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import LoginPage from "./pages/LoginPage";
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
         <Route path="/rooms" element={<RoomsPage />} />
         <Route path="/rooms/:id" element={<RoomDetailPage />} />
         <Route path="/location" element={<LocationPage />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Route>
 
       <Route path="/login" element={<LoginPage />} />

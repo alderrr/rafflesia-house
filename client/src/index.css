@@ -2,35 +2,43 @@
 
 /* 🌿 Theme */
 :root {
-  --color-bg: #ece8dd;
-  --color-surface: #ffffff;
+  --color-bg: ##ece8dd; /* main background (cream) */
+  --color-surface: #ffffff; /* cards */
+
+  --color-surface-soft: #f7f3eb; /* NEW: soft beige layer */
+
   --color-primary: #593924;
   --color-secondary: #74572d;
+
   --color-accent: #9f9c97;
-  --color-border: #ccc4af;
+  --color-border: #d8d1c0;
+
   --color-text: #2b2b2b;
   --color-text-muted: #6b6b6b;
+
+  --color-accent-orange: #c47a2c;
+  --color-accent-orange-hover: #a86422;
 }
 
 /* Global */
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: "Roboto", system-ui, sans-serif;
 }
 
 /* Buttons */
 .btn-primary {
-  background: var(--color-primary);
+  background: var(--color-accent-orange);
   color: white;
   border-radius: 12px;
   padding: 10px 16px;
-  font-weight: 600;
+  font-weight: 500;
   transition: 0.2s;
 }
 
 .btn-primary:hover {
-  background: var(--color-secondary);
+  background: var(--color-accent-orange-hover);
 }
 
 .btn-secondary {
@@ -40,6 +48,10 @@ body {
   border-radius: 12px;
   padding: 10px 16px;
   font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-soft);
 }
 
 /* Cards */
@@ -71,6 +83,18 @@ body {
 @keyframes fadeUp {
   to {
     opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+  100% {
     transform: translateY(0);
   }
 }

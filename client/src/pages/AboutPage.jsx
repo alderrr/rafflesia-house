@@ -1,6 +1,7 @@
-import { Phone, MapPin, Mail, MessageCircle } from "lucide-react";
+import { Phone, MapPin, Mail } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
-function ContactPage() {
+function AboutPage() {
   return (
     <div className="space-y-10">
       {/* Title */}
@@ -34,7 +35,7 @@ function ContactPage() {
             <MapPin size={20} />
             <p className="text-[var(--color-text-muted)] leading-relaxed">
               Rafflesia House <br />
-              Gang Rafflesia II <br />
+              Gang Rafflesia 2 No.156A, 14 Ulu, Plaju <br />
               Palembang, Indonesia
             </p>
           </div>
@@ -52,7 +53,7 @@ function ContactPage() {
             rel="noreferrer"
             className="btn-primary inline-flex items-center justify-center gap-2 mt-2"
           >
-            <MessageCircle size={18} />
+            <FaWhatsapp size={18} />
             Contact via WhatsApp
           </a>
         </div>
@@ -111,4 +112,4 @@ function ContactPage() {
   );
 }
 
-export default ContactPage;
+export default AboutPage;
