@@ -10,7 +10,7 @@ router.get("/", RoomController.getPublicRooms);
 router.get(
   "/admin/list",
   AuthMiddleware.authenticate,
-  AdminMiddleware.onlyAdmin,
+  // AdminMiddleware.onlyAdmin,
   RoomController.getAdminRooms,
 );
 

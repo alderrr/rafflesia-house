@@ -6,6 +6,7 @@ const emptyForm = {
   priceDaily: "",
   priceMonthly: "",
   hasAC: false,
+  isAvailable: true,
   notes: "",
 };
 
@@ -20,6 +21,7 @@ function RoomModal({ room, onClose }) {
       priceDaily: room.priceDaily ?? "",
       priceMonthly: room.priceMonthly ?? "",
       hasAC: room.hasAC ?? false,
+      isAvailable: room.isAvailable ?? true,
       notes: room.notes ?? "",
     };
   }, [room]);
@@ -57,9 +59,7 @@ function RoomModal({ room, onClose }) {
       formData.append("image", file);
 
       const res = await api.post("/uploads/room-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       setImages((prev) => [...prev, res.data.data.url]);
@@ -87,6 +87,7 @@ function RoomModal({ room, onClose }) {
         priceDaily: Number(form.priceDaily),
         priceMonthly: Number(form.priceMonthly),
         hasAC: form.hasAC,
+        isAvailable: form.isAvailable,
         notes: form.notes.trim(),
         photos: images,
       };
@@ -106,29 +107,20 @@ function RoomModal({ room, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="card-base w-full max-w-2xl p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
-            {isEdit ? "Edit Room" : "Add Room"}
-          </h2>
-
-          <button
-            className="btn-secondary"
-            type="button"
-            onClick={() => onClose(false)}
-          >
-            Close
-          </button>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="card-base w-full max-w-2xl p-6 space-y-6">
+        <h2 className="text-lg font-semibold">
+          {isEdit ? "Edit Room" : "Add Room"}
+        </h2>
 
         {errorMsg && (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+          <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
             {errorMsg}
           </div>
         )}
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* Basic Info */}
           <div className="grid gap-4 md:grid-cols-2">
             <input
               name="name"
@@ -138,15 +130,27 @@ function RoomModal({ room, onClose }) {
               className="w-full rounded-lg border border-[var(--color-border)] p-3"
             />
 
-            <label className="flex items-center gap-2 rounded-lg border border-[var(--color-border)] p-3">
-              <input
-                type="checkbox"
-                name="hasAC"
-                checked={form.hasAC}
-                onChange={handleChange}
-              />
-              Has AC
-            </label>
+            <div className="flex gap-4 items-center">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="hasAC"
+                  checked={form.hasAC}
+                  onChange={handleChange}
+                />
+                AC
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="isAvailable"
+                  checked={form.isAvailable}
+                  onChange={handleChange}
+                />
+                Available
+              </label>
+            </div>
 
             <input
               name="priceDaily"
@@ -167,6 +171,7 @@ function RoomModal({ room, onClose }) {
             />
           </div>
 
+          {/* Notes */}
           <textarea
             name="notes"
             placeholder="Notes"
@@ -176,8 +181,10 @@ function RoomModal({ room, onClose }) {
             className="w-full rounded-lg border border-[var(--color-border)] p-3"
           />
 
+          {/* Images */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium">Room photos</label>
+            <label className="text-sm font-medium">Room photos</label>
+
             <input
               type="file"
               accept="image/*"
@@ -196,17 +203,18 @@ function RoomModal({ room, onClose }) {
                 {images.map((img) => (
                   <div
                     key={img}
-                    className="relative overflow-hidden rounded-lg"
+                    className="relative group overflow-hidden rounded-lg"
                   >
                     <img
                       src={img}
                       alt="Room"
                       className="h-24 w-full object-cover"
                     />
+
                     <button
                       type="button"
                       onClick={() => removeImage(img)}
-                      className="absolute right-1 top-1 rounded bg-black/60 px-2 py-1 text-xs text-white"
+                      className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition text-white text-xs flex items-center justify-center"
                     >
                       Remove
                     </button>
@@ -216,7 +224,8 @@ function RoomModal({ room, onClose }) {
             )}
           </div>
 
-          <div className="flex justify-end gap-2">
+          {/* Actions */}
+          <div className="flex justify-end gap-2 pt-2">
             <button
               className="btn-secondary"
               type="button"
@@ -224,6 +233,7 @@ function RoomModal({ room, onClose }) {
             >
               Cancel
             </button>
+
             <button className="btn-primary" disabled={loading || uploading}>
               {loading ? "Saving..." : isEdit ? "Update Room" : "Create Room"}
             </button>

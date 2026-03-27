@@ -1,51 +1,54 @@
-import { useEffect, useState } from "react";
-import api from "../../services/api";
+import { useState } from "react";
+import UserList from "./UserList";
+import UserModal from "./UserModal";
 
 function UserSection() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchUsers = async () => {
-      try {
-        const res = await api.get("/users");
-
-        if (isMounted) {
-          setUsers(res.data.data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchUsers();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-semibold">User Management</h1>
-
-      {users.map((user) => (
-        <div key={user.id} className="card-base p-4 flex justify-between">
-          <div>
-            <p className="font-medium">{user.username}</p>
-            <p className="text-sm text-gray-500">{user.role}</p>
-          </div>
-
-          <span
-            className={`text-sm ${
-              user.isActive ? "text-[var(--color-secondary)]" : "text-gray-400"
-            }`}
-          >
-            {user.isActive ? "Active" : "Inactive"}
-          </span>
+      {/* Header */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">User Management</h1>
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Manage admin and staff accounts
+          </p>
         </div>
-      ))}
+
+        <button
+          className="btn-primary"
+          onClick={() => {
+            setSelectedUser(null);
+            setOpenModal(true);
+          }}
+        >
+          + Add User
+        </button>
+      </div>
+
+      {/* List */}
+      <UserList
+        refreshKey={refreshKey}
+        onEdit={(user) => {
+          setSelectedUser(user);
+          setOpenModal(true);
+        }}
+      />
+
+      {/* Modal */}
+      {openModal && (
+        <UserModal
+          user={selectedUser}
+          onClose={(didChange = false) => {
+            setOpenModal(false);
+            setSelectedUser(null);
+            if (didChange) setRefreshKey((prev) => prev + 1);
+          }}
+        />
+      )}
     </div>
   );
 }

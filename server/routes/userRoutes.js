@@ -21,7 +21,7 @@ router.post(
 router.get(
   "/",
   AuthMiddleware.authenticate,
-  AdminMiddleware.onlyAdmin,
+  // AdminMiddleware.onlyAdmin,
   UserController.getUsers,
 );
 

@@ -5,7 +5,32 @@ function AboutPage() {
   return (
     <div className="space-y-10">
       {/* Title */}
-      <div>
+      <div className="max-w-3xl mx-auto text-center space-y-6">
+        <h1 className="text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
+          About Rafflesia House
+        </h1>
+
+        <p className="text-[var(--color-text-muted)] leading-relaxed">
+          Rafflesia House is a modern boarding house located in the heart of
+          Palembang, designed to provide a comfortable and peaceful living
+          experience for students and professionals.
+        </p>
+
+        <p className="text-[var(--color-text-muted)] leading-relaxed">
+          Located in a quiet neighborhood, yet close to universities,
+          transportation, and daily conveniences, Rafflesia House offers the
+          perfect balance between accessibility and tranquility.
+        </p>
+      </div>
+
+      <div className="mt-10">
+        <img
+          src="https://placehold.co/1200x500?text=Rafflesia+House"
+          className="w-full h-[300px] md:h-[400px] object-cover rounded-2xl"
+        />
+      </div>
+
+      <div className="max-w-3xl mx-auto text-center">
         <h1 className="text-3xl font-semibold text-[var(--color-primary)]">
           Contact & Location
         </h1>
@@ -80,8 +105,12 @@ function AboutPage() {
         </div>
       </div>
 
+      <div className="flex justify-center">
+        <div className="h-px w-16 bg-[var(--color-border)] opacity-50"></div>
+      </div>
+
       {/* LOCATION PHOTOS */}
-      <div className="space-y-4">
+      <div className="text-center space-y-4">
         <h2 className="text-lg font-semibold text-[var(--color-primary)]">
           Surroundings
         </h2>

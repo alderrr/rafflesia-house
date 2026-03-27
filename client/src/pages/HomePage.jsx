@@ -30,7 +30,7 @@ function HomePage() {
         />
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 text-white max-w-3xl">
@@ -102,14 +102,22 @@ function HomePage() {
       </div>
 
       {/* SOFT SECTION DIVIDER */}
-      <div className="h-px bg-[var(--color-border)] opacity-40"></div>
+      {/* <div className="h-px bg-[var(--color-border)] opacity-40"></div> */}
+
+      <div className="flex justify-center">
+        <div className="h-px w-16 bg-[var(--color-border)] opacity-50"></div>
+      </div>
 
       {/* FEATURED ROOMS */}
       <div className="space-y-8 fade-up">
-        <div className="flex justify-between items-center">
+        <div className="text-center space-y-2">
           <h2 className="text-2xl font-semibold text-[var(--color-primary)]">
             Featured Rooms
           </h2>
+
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Discover our most popular rooms
+          </p>
 
           <Link
             to="/rooms"
@@ -124,13 +132,13 @@ function HomePage() {
             <Link
               to={`/rooms/${room.id}`}
               key={room.id}
-              className="card-base overflow-hidden transition hover:shadow-lg hover:-translate-y-1 block"
+              className="card-base overflow-hidden transition duration-300 hover:shadow-xl hover:-translate-y-1 block group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <img
                 src={room.photos?.[0] || "https://placehold.co/600x400"}
                 loading="lazy"
-                className="w-full h-44 object-cover"
+                className="w-full h-44 object-cover transition duration-500 group-hover:scale-105"
               />
 
               <div className="p-4 space-y-2">
@@ -156,17 +164,25 @@ function HomePage() {
       </div>
 
       {/* SOFT SECTION DIVIDER */}
-      <div className="h-px bg-[var(--color-border)] opacity-40"></div>
+      {/* <div className="h-px bg-[var(--color-border)] opacity-40"></div> */}
+
+      <div className="flex justify-center">
+        <div className="h-px w-16 bg-[var(--color-border)] opacity-50"></div>
+      </div>
 
       {/* TESTIMONIALS */}
-      <div className="space-y-8">
+      <div className="text-center space-y-2">
         <h2 className="text-2xl font-semibold text-[var(--color-primary)]">
           What Our Residents Say
         </h2>
 
+        <p className="text-sm text-[var(--color-text-muted)]">
+          Real experiences from our residents
+        </p>
+
         <div className="grid gap-6 md:grid-cols-3">
           {/* Card 1 */}
-          <div className="card-base p-5 space-y-3 hover:shadow-lg transition">
+          <div className="card-base p-5 space-y-3 hover:shadow-xl hover:-translate-y-1 transition duration-300">
             <div className="text-yellow-500 text-sm">★★★★★</div>
 
             <p className="text-sm text-[var(--color-text-muted)]">
@@ -180,7 +196,7 @@ function HomePage() {
           </div>
 
           {/* Card 2 */}
-          <div className="card-base p-5 space-y-3 hover:shadow-lg transition">
+          <div className="card-base p-5 space-y-3 hover:shadow-xl hover:-translate-y-1 transition duration-300">
             <div className="text-yellow-500 text-sm">★★★★★</div>
 
             <p className="text-sm text-[var(--color-text-muted)]">
@@ -192,7 +208,7 @@ function HomePage() {
           </div>
 
           {/* Card 3 */}
-          <div className="card-base p-5 space-y-3 hover:shadow-lg transition">
+          <div className="card-base p-5 space-y-3 hover:shadow-xl hover:-translate-y-1 transition duration-300">
             <div className="text-yellow-500 text-sm">★★★★★</div>
 
             <p className="text-sm text-[var(--color-text-muted)]">
