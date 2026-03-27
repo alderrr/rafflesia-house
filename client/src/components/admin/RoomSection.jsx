@@ -9,37 +9,40 @@ function RoomSection() {
 
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Room Management</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">Room Management</h1>
+          <p className="text-sm text-[var(--color-text-muted)]">
+            Create, edit, deactivate, and update availability.
+          </p>
+        </div>
 
         <button
+          className="btn-primary"
           onClick={() => {
             setSelectedRoom(null);
             setOpenModal(true);
           }}
-          className="btn-primary"
         >
           + Add Room
         </button>
       </div>
 
-      {/* Table/List */}
       <RoomList
-        key={refreshKey}
+        refreshKey={refreshKey}
         onEdit={(room) => {
           setSelectedRoom(room);
           setOpenModal(true);
         }}
       />
 
-      {/* Modal */}
       {openModal && (
         <RoomModal
           room={selectedRoom}
-          onClose={() => {
+          onClose={(didChange = false) => {
             setOpenModal(false);
-            setRefreshKey((prev) => prev + 1);
+            setSelectedRoom(null);
+            if (didChange) setRefreshKey((prev) => prev + 1);
           }}
         />
       )}

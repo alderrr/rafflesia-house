@@ -8,7 +8,7 @@ const AdminMiddleware = require("../middleware/adminMiddleware");
 router.get("/", RoomController.getPublicRooms);
 
 router.get(
-  "/admin",
+  "/admin/list",
   AuthMiddleware.authenticate,
   AdminMiddleware.onlyAdmin,
   RoomController.getAdminRooms,
@@ -22,17 +22,26 @@ router.post(
   AdminMiddleware.onlyAdmin,
   RoomController.createRoom,
 );
+
 router.put(
-  "/",
+  "/:id",
   AuthMiddleware.authenticate,
   AdminMiddleware.onlyAdmin,
   RoomController.updateRoom,
 );
-router.delete(
-  "/",
+
+router.patch(
+  "/:id/toggle-availability",
   AuthMiddleware.authenticate,
   AdminMiddleware.onlyAdmin,
-  RoomController.deleteRoom,
+  RoomController.toggleAvailability,
+);
+
+router.patch(
+  "/:id/deactivate",
+  AuthMiddleware.authenticate,
+  AdminMiddleware.onlyAdmin,
+  RoomController.deactivateRoom,
 );
 
 module.exports = router;

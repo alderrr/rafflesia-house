@@ -31,10 +31,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       isAvailable: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: true,
       },
       photos: {
         type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: [],
+      },
+      notes: {
+        type: DataTypes.TEXT,
         allowNull: true,
       },
     },

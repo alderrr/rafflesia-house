@@ -25,13 +25,23 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
-      isAvailable: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
-      },
       photos: {
         type: Sequelize.JSONB,
         allowNull: true,
+        defaultValue: [],
+      },
+      notes: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      isAvailable: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+      isActive: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,
